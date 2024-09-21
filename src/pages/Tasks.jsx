@@ -4,10 +4,12 @@ import MyTasks from "../components/tasks/MyTasks";
 import TaskCard from "../components/tasks/TaskCard";
 import { useState } from "react";
 import PopupForm from "../components/popupForm/PopupForm";
+import { useSelector } from "react-redux";
 
 const Tasks = () => {
+  const tasks = useSelector((state) => state.task);
   const [isOpen, setIsOpen] = useState(false);
-
+  console.log(tasks);
   const handleOpenPopup = () => {
     setIsOpen(true);
   };
@@ -51,7 +53,16 @@ const Tasks = () => {
               </p>
             </div>
             <div className="space-y-3">
-              <TaskCard />
+              {tasks.map((task) => (
+                <TaskCard
+                  key={task.id}
+                  title={task.title}
+                  description={task.description}
+                  assignedTo={task.assignedTo}
+                  date={task.date}
+                  priority={task.priority}
+                />
+              ))}
             </div>
           </div>
           <div className="relative h-[800px] overflow-auto">

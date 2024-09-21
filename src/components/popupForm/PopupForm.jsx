@@ -2,9 +2,12 @@
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import TaskInput from "../components/forms/TaskInput";
-import TaskTextarea from "../components/forms/TaskTextarea";
-import TaskSelect from "../components/forms/TaskSelect";
+import TaskForm from "../forms/TaskForm";
+import TaskInput from "../forms/TaskInput";
+import TaskTextarea from "../forms/TaskTextarea";
+import TaskSelect from "../forms/TaskSelect";
+import { useDispatch } from "react-redux";
+import { addTask } from "../../redux/task/taskSlice";
 
 const taskSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -15,7 +18,7 @@ const taskSchema = z.object({
     .refine((val) => !isNaN(new Date(val).getTime()), {
       message: "Invalid date",
     }),
-  assignTo: z.enum(["Jane", "John", "Doe"], {
+  assignedTo: z.enum(["Jane", "John", "Doe"], {
     errorMap: () => ({ message: "Invalid selection for Assign To" }),
   }),
   priority: z.enum(["High", "Medium", "Low"], {
@@ -24,8 +27,10 @@ const taskSchema = z.object({
 });
 
 const PopupForm = ({ isOpen, handleClosePopup }) => {
+  const dispatch = useDispatch();
   const handleSubmit = (data) => {
     console.log(data);
+    dispatch(addTask(data));
     handleClosePopup(); // Close popup on form submission
   };
 
@@ -46,7 +51,7 @@ const PopupForm = ({ isOpen, handleClosePopup }) => {
           <TaskInput label="Date" name="date" type="date" />
           <TaskSelect
             label="Assign to"
-            name="assignTo"
+            name="assignedTo"
             options={[
               { value: "Jane", label: "Jane" },
               { value: "John", label: "John" },
