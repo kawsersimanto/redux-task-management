@@ -19,4 +19,4 @@ jobs:
         run: npm install --global vercel@latest
 
       - name: Build Project Artifacts
-        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --org=${{ secrets.VERCEL_ORG_ID }}
+        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
