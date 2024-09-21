@@ -52,7 +52,7 @@ jobs:
           git merge temp-branch
           git push origin main
 
-      - name: Revert Main Branch on Failure
+      - name: Revert Main Branch on Failures
         if: failure() # Revert only if previous steps failed
         run: |
           git checkout main
