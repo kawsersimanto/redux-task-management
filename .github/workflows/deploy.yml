@@ -10,13 +10,55 @@ on:
       - main
 
 jobs:
-  Deploy-Preview:
+  deploy-preview:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
 
-      - name: Build Project Artifacts
-        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Create Temporary Branch
+        run: |
+          git checkout -b temp-branch
+          git push origin temp-branch
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Lint
+        run: npm run lint
+        continue-on-error: false
+
+      - name: Build Project
+        run: npm run build
+        continue-on-error: false
+
+      - name: Deploy to Vercel
+        run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        continue-on-error: false
+
+      - name: Merge Temp Branch to Main
+        if: success() # Merge only if all previous steps succeeded
+        run: |
+          git checkout main
+          git merge temp-branch
+          git push origin main
+
+      - name: Revert Main Branch on Failure
+        if: failure() # Revert only if previous steps failed
+        run: |
+          git checkout main
+          git reset --hard origin/main
+          git push origin main --force
+
+      - name: Delete Temporary Branch
+        run: |
+          git push origin --delete temp-branch
