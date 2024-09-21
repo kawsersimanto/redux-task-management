@@ -1,10 +1,9 @@
-// PopupForm.js
 import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import TaskForm from "../forms/TaskForm";
 import TaskInput from "../forms/TaskInput";
-import TaskTextarea from "../forms/TaskTextarea";
+import TaskTextarea from "../forms/TaskTextArea";
 import TaskSelect from "../forms/TaskSelect";
 import { useDispatch } from "react-redux";
 import { addTask } from "../../redux/task/taskSlice";
