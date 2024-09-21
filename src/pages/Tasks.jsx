@@ -33,7 +33,7 @@ const Tasks = () => {
               <BellIcon className="h-6 w-6" />
             </button>
             <button className="btn btn-primary" onClick={handleOpenPopup}>
-              Add Task
+              Add new Task
             </button>
             <div className="h-10 w-10 rounded-xl overflow-hidden">
               <img
